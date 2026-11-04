@@ -1,0 +1,13 @@
+# Dashboard visualization
+- [x] Add filtered schedule, project, workload and financial charts.
+- [x] Support budget and actual cost columns in Excel imports without inventing financial values.
+- [x] Verify calculations and import-to-chart flow on desktop and mobile.
+- [x] Account for Excel, Microsoft Project and other data sources; distinguish working imports from future direct connections.
+- [x] Explain Excel sync options.
+- [x] Establish workbook location: SharePoint / Teams; recommend read-only Excel sync as the next step, not yet connected.
+- [x] Store jobs, tasks, import history and screen settings centrally so TVs and every open page share one copy.
+- [x] Add sign-in (email, Google, Lovable) so only signed-in people can change data.
+- [x] TV screens: one fixed address per screen, chosen view, auto-refresh, on/off hours.
+- [ ] Connect Excel files in SharePoint / Teams directly (Microsoft business account) — paused, waiting on Richard's account details.
+- [ ] Import Microsoft Project (.mpp) files.
+- [ ] Merge with the Big-Screen repository — still needs access to that repo.

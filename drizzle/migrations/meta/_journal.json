@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793800289655,
+      "tag": "0000_dashboard_cloud_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793800348080,
+      "tag": "0001_screen_schedule_windows",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793802009217,
+      "tag": "0002_editor_role_writes",
+      "breakpoints": true
+    }
+  ]
+}
