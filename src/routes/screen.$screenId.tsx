@@ -27,6 +27,7 @@ const heading: Record<ScreenView, string> = {
   jobs: "Jobs",
   staff: "Staff",
   attention: "Needs attention",
+  quad: "Four views",
 };
 
 function Clock() {
@@ -53,16 +54,30 @@ function Paused({ screen }: { screen: ScreenConfig }) {
   );
 }
 
-function ScreenBody({ view, jobs, tasks, today }: { view: ScreenView; jobs: Job[]; tasks: Task[]; today: string }) {
-  if (view === "kanban") return <KanbanBoard tasks={tasks} today={today} />;
+function ScreenBody({ view, jobs, tasks, today, compact = false }: { view: ScreenView; jobs: Job[]; tasks: Task[]; today: string; compact?: boolean }) {
+  if (view === "kanban") return <KanbanBoard tasks={tasks} today={today} compact={compact} />;
   if (view === "jobs") return <JobsTable jobs={jobs} tasks={tasks} />;
   if (view === "staff") return <StaffBoard tasks={tasks} today={today} />;
   if (view === "attention") return <AttentionList tasks={tasks} today={today} />;
   return (
     <>
-      <DashboardCharts />
-      <AttentionList tasks={tasks} today={today} />
+      <DashboardCharts compact={compact} />
+      {!compact && <AttentionList tasks={tasks} today={today} />}
     </>
+  );
+}
+
+/** A 2x2 master screen: four views side by side, each in its own panel. */
+function QuadBody({ screen, jobs, tasks, today }: { screen: ScreenConfig; jobs: Job[]; tasks: Task[]; today: string }) {
+  return (
+    <div className="grid h-full min-h-0 grid-cols-1 gap-4 overflow-auto xl:grid-cols-2 xl:grid-rows-2 xl:overflow-hidden">
+      {screen.quadViews.map((view, i) => (
+        <section key={`${view}-${i}`} className="quad panel flex min-h-[70vh] min-w-0 flex-col overflow-auto p-4 xl:min-h-0">
+          <h2 className="mb-3 text-lg font-semibold">{heading[view]}</h2>
+          <ScreenBody view={view} jobs={jobs} tasks={tasks} today={today} compact />
+        </section>
+      ))}
+    </div>
   );
 }
 
@@ -78,12 +93,14 @@ function ScreenPage() {
     return () => document.documentElement.classList.remove("tv-mode");
   }, []);
 
+  const quad = Boolean(screen && on && screen.view === "quad");
+
   return (
-    <div className="min-h-screen bg-background p-6 sm:p-10">
-      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
+    <div className={quad ? "flex h-screen flex-col gap-4 overflow-hidden bg-background p-5" : "min-h-screen bg-background p-6 sm:p-10"}>
+      <header className={`flex flex-wrap items-end justify-between gap-4 border-b border-border ${quad ? "shrink-0 pb-3" : "pb-5"}`}>
         <div>
           <p className="eyebrow">FourZero · {screen?.name ?? screenId}</p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight">{screen ? heading[screen.view] : "Unknown screen"}</h1>
+          <h1 className={`mt-2 font-semibold tracking-tight ${quad ? "text-2xl" : "text-4xl"}`}>{screen ? heading[screen.view] : "Unknown screen"}</h1>
         </div>
         <div className="text-right">
           <Clock />
@@ -91,7 +108,7 @@ function ScreenPage() {
         </div>
       </header>
 
-      <main className="mt-6 space-y-6">
+      <main className={quad ? "min-h-0 flex-1" : "mt-6 space-y-6"}>
         {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
         {error && <p className="text-sm text-destructive">{error}</p>}
         {!loading && !screen && (
@@ -105,7 +122,8 @@ function ScreenPage() {
           </div>
         )}
         {screen && !on && <Paused screen={screen} />}
-        {screen && on && <ScreenBody view={screen.view} jobs={jobs} tasks={tasks} today={today} />}
+        {screen && on && screen.view === "quad" && <QuadBody screen={screen} jobs={jobs} tasks={tasks} today={today} />}
+        {screen && on && screen.view !== "quad" && <ScreenBody view={screen.view} jobs={jobs} tasks={tasks} today={today} />}
       </main>
     </div>
   );

@@ -80,6 +80,7 @@ export type Database = {
           from_time: string | null
           id: string
           name: string
+          quad_views: string[]
           sort: number
           to_time: string | null
           view: string
@@ -89,6 +90,7 @@ export type Database = {
           from_time?: string | null
           id: string
           name: string
+          quad_views?: string[]
           sort?: number
           to_time?: string | null
           view?: string
@@ -98,6 +100,7 @@ export type Database = {
           from_time?: string | null
           id?: string
           name?: string
+          quad_views?: string[]
           sort?: number
           to_time?: string | null
           view?: string

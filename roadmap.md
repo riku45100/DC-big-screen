@@ -8,6 +8,7 @@
 - [x] Store jobs, tasks, import history and screen settings centrally so TVs and every open page share one copy.
 - [x] Add sign-in (email, Google, Lovable) so only signed-in people can change data.
 - [x] TV screens: one fixed address per screen, chosen view, auto-refresh, on/off hours.
+- [x] Master screen: "Four views (2×2)" option shows four chosen views on one screen.
 - [ ] Connect Excel files in SharePoint / Teams directly (Microsoft business account) — paused, waiting on Richard's account details.
 - [ ] Import Microsoft Project (.mpp) files.
 - [ ] Merge with the Big-Screen repository — still needs access to that repo.

@@ -10,21 +10,24 @@ export function KanbanBoard({
   tasks,
   today,
   onStatus,
+  compact = false,
 }: {
   tasks: Task[];
   today: string;
   onStatus?: (id: string, s: Status) => void;
+  /** Narrow layout for the four-view master screen: columns shrink instead of scrolling sideways. */
+  compact?: boolean;
 }) {
   const [over, setOver] = useState<Status | null>(null);
   return (
-    <section aria-label="Kanban board">
+    <section aria-label="Kanban board" className={compact ? "flex min-h-0 flex-1 flex-col" : ""}>
       {onStatus && (
         <p className="mb-4 text-sm text-muted-foreground">
           Drag cards between columns, or use each card's selector. Board status is separate from schedule progress.
         </p>
       )}
-      <div className="overflow-x-auto pb-4">
-        <div className="grid min-w-[1400px] grid-cols-5 gap-4">
+      <div className={compact ? "min-h-0 flex-1" : "overflow-x-auto pb-4"}>
+        <div className={compact ? "grid h-full grid-cols-5 gap-2" : "grid min-w-[1400px] grid-cols-5 gap-4"}>
           {statuses.map((s) => {
             const col = tasks.filter((t) => t.status === s);
             return (
@@ -33,7 +36,7 @@ export function KanbanBoard({
                 aria-label={s}
                 data-status={s}
                 data-over={over === s || undefined}
-                className="kanban-col"
+                className={`kanban-col ${compact ? "min-h-0 overflow-auto" : ""}`}
                 onDragOver={(e) => {
                   if (!onStatus) return;
                   e.preventDefault();

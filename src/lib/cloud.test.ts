@@ -32,7 +32,15 @@ describe("database rows", () => {
 
   it("only accepts real screen views", () => {
     expect(isScreenView("attention")).toBe(true);
+    expect(isScreenView("quad")).toBe(true);
     expect(isScreenView("pizza")).toBe(false);
+  });
+
+  it("fills a quad screen with four valid views, dropping unknowns and quad itself", () => {
+    const row = { id: "screen-1", name: "S1", view: "quad", active: true, sort: 1, from_time: null, to_time: null };
+    expect(screenFromRow({ ...row, quad_views: ["jobs", "pizza", "quad"] }).quadViews).toEqual(["jobs", "overview", "kanban", "jobs"]);
+    expect(screenFromRow({ ...row, quad_views: null }).quadViews).toEqual(["overview", "kanban", "jobs", "staff"]);
+    expect(screenFromRow({ ...row, quad_views: ["staff", "attention", "jobs", "kanban"] }).quadViews).toEqual(["staff", "attention", "jobs", "kanban"]);
   });
 
   it("reads import history rows, treating missing counts as zero", () => {

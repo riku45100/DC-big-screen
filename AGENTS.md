@@ -15,3 +15,4 @@
 - Spreadsheet parsing rules are pure functions in `src/lib/dashboard.ts` (tested in `dashboard.test.ts`); the `xlsx` library is only dynamically imported in the browser to keep it out of SSR.
 - Each dashboard section is its own route; the shared shell (`AppShell`) wraps `<Outlet />` in `__root.tsx`, except `/screen/*` which renders bare for wall displays. Board renderers are shared between the dashboard and the screens in `src/components/BoardViews.tsx` (passing no status handler makes them read-only).
 - Visualization aggregations live in a pure tested module; charts consume the shared filtered store, and financial series are separated by currency to avoid misleading totals.
+- The four-view master screen must fit one display with no page scrolling: each quarter is a fixed-height panel that scrolls internally, and charts/board render in a compact variant there (`compact` prop).

@@ -138,6 +138,9 @@
   .dropzone { @apply flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-input p-8 text-center transition-colors hover:border-primary hover:bg-primary/5; }
   .status-tile { @apply rounded-xl border border-t-2 border-border p-4 text-left transition-colors hover:bg-accent; border-top-color: var(--tile-color); }
   .kanban-col { @apply rounded-2xl border border-border bg-card/70 min-h-80 border-t-2 p-3 transition-colors; border-top-color: var(--tile-color); }
+  /* Master screen: board columns shrink so all four quarters fit one display. */
+  .quad .kanban-col { @apply min-h-32; }
+  .quad .kanban-col article { @apply p-2; }
   .kanban-col[data-over] { @apply bg-primary/5 ring-1 ring-primary/40; }
   [data-status="To Do"] { --tile-color: var(--status-todo); }
   [data-status="In Progress"] { --tile-color: var(--status-progress); }

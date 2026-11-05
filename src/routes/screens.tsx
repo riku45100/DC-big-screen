@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { screenViews, type ScreenConfig, type ScreenView } from "@/lib/cloud";
+import { quadSlotViews, screenViews, type QuadSlotView, type ScreenConfig, type ScreenView } from "@/lib/cloud";
 import { screenScheduleLabel } from "@/lib/screens";
 import { useDashboard } from "@/lib/store";
 
@@ -25,7 +25,10 @@ const viewLabels: Record<ScreenView, string> = {
   jobs: "Jobs",
   staff: "Staff",
   attention: "Needs attention",
+  quad: "Four views (2×2)",
 };
+
+const quadSlotLabels = ["Top left", "Top right", "Bottom left", "Bottom right"];
 
 function addressOf(id: string) {
   return `${window.location.origin}/screen/${id}`;
@@ -58,6 +61,31 @@ function ScreenRow({ screen }: { screen: ScreenConfig }) {
           />
         </label>
         <p className="mt-2 truncate font-mono text-xs text-muted-foreground">{addressOf(screen.id)}</p>
+        {screen.view === "quad" && (
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {quadSlotLabels.map((label, i) => (
+              <label key={label} className="block text-xs text-muted-foreground">
+                {label}
+                <select
+                  className="field mt-1 w-full"
+                  value={screen.quadViews[i] ?? "overview"}
+                  disabled={!canEdit}
+                  onChange={(e) => {
+                    const quadViews = [...screen.quadViews] as QuadSlotView[];
+                    quadViews[i] = e.target.value as QuadSlotView;
+                    updateScreen(screen.id, { quadViews });
+                  }}
+                >
+                  {quadSlotViews.map((v) => (
+                    <option key={v} value={v}>
+                      {viewLabels[v]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+        )}
       </div>
 
       <label className="block text-xs text-muted-foreground">

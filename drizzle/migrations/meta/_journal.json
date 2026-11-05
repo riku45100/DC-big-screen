@@ -22,6 +22,20 @@
       "when": 1793802009217,
       "tag": "0002_editor_role_writes",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793830540758,
+      "tag": "0003_screen_quad_views",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793830609083,
+      "tag": "0004_allow_quad_screen_view",
+      "breakpoints": true
     }
   ]
 }

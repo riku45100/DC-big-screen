@@ -3,8 +3,14 @@ import { demoJobs, demoTasks, statuses, type ImportRecord, type Job, type Status
 
 /* ---------- Screen configuration ---------- */
 
-export const screenViews = ["overview", "kanban", "jobs", "staff", "attention"] as const;
+export const screenViews = ["overview", "kanban", "jobs", "staff", "attention", "quad"] as const;
 export type ScreenView = (typeof screenViews)[number];
+
+/** Views that can fill a quadrant of a "quad" screen (everything except quad itself). */
+export const quadSlotViews = screenViews.filter((v) => v !== "quad") as Exclude<ScreenView, "quad">[];
+export type QuadSlotView = (typeof quadSlotViews)[number];
+
+export const defaultQuadViews: QuadSlotView[] = ["overview", "kanban", "jobs", "staff"];
 
 export interface ScreenConfig {
   id: string;
@@ -16,6 +22,8 @@ export interface ScreenConfig {
   fromTime: string;
   /** "HH:MM" or "" when the screen has no end time. */
   toTime: string;
+  /** The four views of a "quad" screen, in reading order (top-left, top-right, bottom-left, bottom-right). */
+  quadViews: QuadSlotView[];
 }
 
 export const screenPath = (id: string) => `/screen/${id}`;
@@ -65,6 +73,7 @@ type ScreenRow = {
   sort: number | null;
   from_time: string | null;
   to_time: string | null;
+  quad_views?: unknown;
 };
 
 /** Postgres numeric columns arrive as strings, so convert before using them. */
@@ -148,6 +157,9 @@ export function importFromRow(row: ImportRow): ImportRecord {
 }
 
 export function screenFromRow(row: ScreenRow): ScreenConfig {
+  const stored = Array.isArray(row.quad_views) ? row.quad_views : [];
+  const picked = stored.filter((v): v is QuadSlotView => (quadSlotViews as readonly string[]).includes(String(v)));
+  const quadViews = [...picked, ...defaultQuadViews].slice(0, 4);
   return {
     id: row.id,
     name: row.name,
@@ -156,6 +168,7 @@ export function screenFromRow(row: ScreenRow): ScreenConfig {
     sort: row.sort ?? 0,
     fromTime: toTime(row.from_time),
     toTime: toTime(row.to_time),
+    quadViews,
   };
 }
 
@@ -278,6 +291,7 @@ export async function saveScreen(screen: ScreenConfig) {
           sort: screen.sort,
           from_time: screen.fromTime || null,
           to_time: screen.toTime || null,
+          quad_views: screen.quadViews,
         })
         .eq("id", screen.id)
         .select("id"),
